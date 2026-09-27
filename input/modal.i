@@ -1,4 +1,4 @@
-index = 0
+index = 4
 
 [Mesh]
   [gmg]
@@ -119,7 +119,7 @@ index = 0
   type = Eigenvalue
   solve_type = KRYLOVSCHUR
   which_eigen_pairs = SMALLEST_MAGNITUDE
-  n_eigen_pairs = 2
+  n_eigen_pairs = 12
   n_basis_vectors = 5
   petsc_options = '-eps_monitor_all -eps_view'
   petsc_options_iname = '-st_type -eps_target -st_pc_type -st_pc_factor_mat_solver_type'

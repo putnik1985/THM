@@ -1,70 +1,85 @@
+young_modulus = 2.e+11
+
 [Mesh]
- [rectange]
+ [rectangle]
   type = GeneratedMeshGenerator
   xmin = 0.
   xmax = 3.
-  ymin = 0.
-  ymax = 1.
   nx = 300
-  ny = 100
-  dim = 2
+  dim = 1
  []
 []
 
 [Variables]
-  [ux]
-  []
-  [uy]
+  [u]
+    order = FIRST
+    family = LAGRANGE
   []
 []
 
 [Kernels]
- [momentum]
-  type = Equilibrium_2D 
+ [u_kernel]
+  type = Equilibrium_1D 
   variable = u 
+
+  E = ${young_modulus}
  []
 []
 
+[AuxVariables]
+ [stress]
+   order = FIRST
+   family = LAGRANGE
+ []
+[]
+
+[AuxKernels]
+ [stress_kernel]
+   type = Stress
+   variable = stress
+   displacement = u
+   
+   E = ${young_modulus}
+   execute_on = timestep_end
+ [] 
+[]
+
 [BCs]
-
-  [./bottom] # arbitrary user-chosen name
-    type = NeumannBC
-    variable = T
-    boundary = bottom # This must match a named boundary in the mesh file
-    value = 0.
-  [../]
-
-  [./top] # arbitrary user-chosen name
-    type = NeumannBC
-    variable = T
-    boundary = top # This must match a named boundary in the mesh file
-    value = 0.
-  [../]
-
-  [./left] # arbitrary user-chosen name
+  [./left] 
     type = DirichletBC
-    variable = T
+    variable = u 
     boundary = left
-    value = 278.15
-  [../]
-
-  [./right] # arbitrary user-chosen name
-    type = NeumannBC
-    variable = T
-    boundary = right
     value = 0.
+  [../]
+  [./right] 
+    type = DirichletBC
+    variable = u 
+    boundary = right
+    value = 3.
   [../]
 []
 
 [Executioner]
-  type = Transient
+  type = Steady
   solve_type = 'PJFNK'
+[]
 
-  start_time = 0.0
-   num_steps = 50
-          dt = 0.0001
+[VectorPostprocessors]
+  [deflection]
+    type = NodalValueSampler
+    variable = u
+    sort_by = x
+  []
+  [sigma]
+    type = NodalValueSampler
+    variable = stress
+    sort_by = x
+  []
 []
 
 [Outputs]
-  exodus = true
+     [csv]
+       type = CSV
+       execute_on = timestep_end
+     []
 []

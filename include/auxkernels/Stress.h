@@ -11,14 +11,14 @@
 
 #include "AuxKernel.h"
 
-class Stress : public AuxKernel
+class Stress : public VectorAuxKernel
 {
 public:
   Stress(const InputParameters & parameters);
   static InputParameters validParams();
 
 protected:
-  virtual Real computeValue() override;
+  virtual RealVectorValue computeValue() override;
 
 private:
   const VariableGradient & grad_u;

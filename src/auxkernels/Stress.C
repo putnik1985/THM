@@ -14,7 +14,7 @@ registerMooseObject("THMApp", Stress);
 InputParameters
 Stress::validParams()
 {
-  InputParameters params = AuxKernel::validParams();
+  InputParameters params = VectorAuxKernel::validParams();
   params.addRequiredParam<Real>("E", "E");
   params.addRequiredCoupledVar("displacement", "Displacement");
 
@@ -22,14 +22,14 @@ Stress::validParams()
 }
 
 Stress::Stress(const InputParameters & parameters)
-  : AuxKernel(parameters),
-    grad_u(coupledGradient("displacement")),
-    young_modulus(getParam<Real>("E"))
+  : VectorAuxKernel(parameters),
+    young_modulus(getParam<Real>("E")),
+    grad_u(coupledGradient("displacement"))
 {
 }
 
-Real
+RealVectorValue
 Stress::computeValue()
 {
-  return young_modulus * grad_u[_qp](0);
+  return young_modulus * grad_u[_qp];
 }

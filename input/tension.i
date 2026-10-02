@@ -1,7 +1,7 @@
 young_modulus = 2.e+11
 
 [Mesh]
- [rectangle]
+ [line]
   type = GeneratedMeshGenerator
   xmin = 0.
   xmax = 3.
@@ -12,8 +12,8 @@ young_modulus = 2.e+11
 
 [Variables]
   [u]
-    order = FIRST
-    family = LAGRANGE
+   order = FIRST
+   family = LAGRANGE
   []
 []
 
@@ -29,7 +29,11 @@ young_modulus = 2.e+11
 [AuxVariables]
  [stress]
    order = FIRST
-   family = LAGRANGE
+   family = MONOMIAL_VEC
+ []
+ [sxx]
+   order = FIRST
+   family = MONOMIAL
  []
 []
 
@@ -42,6 +46,13 @@ young_modulus = 2.e+11
    E = ${young_modulus}
    execute_on = timestep_end
  [] 
+
+ [sxx_kernel]
+  type = VectorVariableComponentAux
+  component = x
+  variable = sxx
+  vector_variable = stress
+ []
 []
 
 [BCs]
@@ -51,11 +62,12 @@ young_modulus = 2.e+11
     boundary = left
     value = 0.
   [../]
+
   [./right] 
     type = DirichletBC
     variable = u 
     boundary = right
-    value = 3.
+    value = 0.001
   [../]
 []
 
@@ -71,13 +83,24 @@ young_modulus = 2.e+11
     sort_by = x
   []
   [sigma]
-    type = NodalValueSampler
-    variable = stress
+    type = ElementValueSampler
+    variable = sxx
     sort_by = x
   []
 []
 
 [Outputs]
+     [exodus]
+       type = Exodus
+       execute_on = timestep_end
+     []
+
+     [gpl]
+       type = Gnuplot
+       extension = gpl
+       execute_on = timestep_end
+     []
+
      [csv]
        type = CSV
        execute_on = timestep_end

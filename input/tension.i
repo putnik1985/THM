@@ -22,7 +22,8 @@ young_modulus = 2.e+11
   type = Equilibrium_1D 
   variable = u 
 
-  E = ${young_modulus}
+  #############E = ${young_modulus}
+  E = 1.0
  []
 []
 
@@ -52,6 +53,7 @@ young_modulus = 2.e+11
   component = x
   variable = sxx
   vector_variable = stress
+  execute_on = timestep_end
  []
 []
 
@@ -64,12 +66,19 @@ young_modulus = 2.e+11
   [../]
 
   [./right] 
-    type = DirichletBC
+    type = StressBC
+    ###type = DirichletBC
+    ###type = NeumannBC
     variable = u 
     boundary = right
-    value = 0.001
+
+    ####value = 0.003
+    ####value = 5.e-8
+    sigma = 10000.
+    E = ${young_modulus}
   [../]
 []
+
 
 [Executioner]
   type = Steady

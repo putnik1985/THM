@@ -1,1 +1,1 @@
-../thm-opt -i modal.i
+../thm-opt -i $1

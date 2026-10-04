@@ -17,14 +17,12 @@ StressBC::validParams()
   InputParameters params = IntegratedBC::validParams();
 
   // Specify input parameters that we want users to be able to set:
-  params.addRequiredParam<Real>("E", "young modulus");
   params.addRequiredParam<Real>("sigma", "sigma");
   return params;
 }
 
 StressBC::StressBC(const InputParameters & parameters)
   : IntegratedBC(parameters),
-    E(getParam<Real>("E")),
     sigma(getParam<Real>("sigma"))
 {
 }
@@ -32,6 +30,6 @@ StressBC::StressBC(const InputParameters & parameters)
 Real
 StressBC::computeQpResidual()
 {
-  // For this Neumann BC grad(u)= value / E on the boundary.
-  return -_test[_i][_qp] * sigma / E;
+  // For this Neumann BC E * grad(u)= sigma on the boundary.
+  return -_test[_i][_qp] * sigma;
 }

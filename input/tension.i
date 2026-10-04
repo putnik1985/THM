@@ -22,8 +22,7 @@ young_modulus = 2.e+11
   type = Equilibrium_1D 
   variable = u 
 
-  #############E = ${young_modulus}
-  E = 1.0
+  E = ${young_modulus}
  []
 []
 
@@ -61,21 +60,16 @@ young_modulus = 2.e+11
   [./left] 
     type = DirichletBC
     variable = u 
-    boundary = left
+    boundary = right
     value = 0.
   [../]
 
   [./right] 
     type = StressBC
-    ###type = DirichletBC
-    ###type = NeumannBC
     variable = u 
-    boundary = right
+    boundary = left
 
-    ####value = 0.003
-    ####value = 5.e-8
     sigma = 10000.
-    E = ${young_modulus}
   [../]
 []
 

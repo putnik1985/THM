@@ -21,6 +21,5 @@ protected:
   virtual Real computeQpResidual() override;
 
 private:
-  Real E;
   Real sigma;
 };
